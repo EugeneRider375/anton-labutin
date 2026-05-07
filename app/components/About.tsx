@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
+import { fadeUp, staggerContainer } from '../lib/variants';
 
 const tools = [
   { name: 'Blender', icon: '⬡' },
@@ -12,25 +13,16 @@ const tools = [
   { name: 'Photoshop', icon: '▣' },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 export function About() {
   return (
     <section id="about" className="py-28 bg-[#0a0a0f]">
       <div className="max-w-6xl mx-auto px-6">
         <div className="grid md:grid-cols-2 gap-16 items-center">
-          {/* Text */}
           <motion.div
             initial="hidden"
             whileInView="show"
             viewport={{ once: true }}
-            variants={{
-              hidden: {},
-              show: { transition: { staggerChildren: 0.12 } },
-            }}
+            variants={staggerContainer}
           >
             <motion.span
               variants={fadeUp}
@@ -84,7 +76,6 @@ export function About() {
             </motion.div>
           </motion.div>
 
-          {/* Tools */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -116,7 +107,6 @@ export function About() {
                 ))}
               </div>
 
-              {/* Deliverables */}
               <div className="mt-6 pt-6 border-t border-[#1a1a2e]">
                 <h3 className="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">
                   Delivery Formats

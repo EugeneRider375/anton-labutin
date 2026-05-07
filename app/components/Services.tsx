@@ -1,5 +1,6 @@
 'use client';
 import { motion } from 'framer-motion';
+import { fadeUp } from '../lib/variants';
 
 const services = [
   {
@@ -40,16 +41,10 @@ const services = [
   },
 ];
 
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
-};
-
 export function Services() {
   return (
     <section id="services" className="py-28 bg-[#0a0a0f]">
       <div className="max-w-6xl mx-auto px-6">
-        {/* Heading */}
         <motion.div
           className="text-center mb-16"
           initial="hidden"
@@ -69,7 +64,6 @@ export function Services() {
           </p>
         </motion.div>
 
-        {/* Cards */}
         <motion.div
           className="grid md:grid-cols-2 gap-6"
           initial="hidden"
@@ -83,7 +77,6 @@ export function Services() {
               variants={fadeUp}
               className={`relative rounded-2xl border ${s.border} bg-gradient-to-br ${s.gradient} bg-[#0f0f1a] p-8 transition-all duration-300 group overflow-hidden`}
             >
-              {/* Subtle glow on hover */}
               <div
                 className={`absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${s.gradient}`}
               />
