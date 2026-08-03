@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Image from 'next/image';
 import {
@@ -8,8 +8,6 @@ import {
   type PortfolioItem,
   type Category,
 } from '../data/portfolio';
-
-// ── Modal ────────────────────────────────────────────────────────────────────
 
 function Modal({
   item,
@@ -51,7 +49,6 @@ function Modal({
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Backdrop */}
       <div
         className="absolute inset-0 bg-black/90 backdrop-blur-sm"
         onClick={onClose}
@@ -64,7 +61,6 @@ function Modal({
         exit={{ scale: 0.95, opacity: 0 }}
         transition={{ duration: 0.2 }}
       >
-        {/* Close */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-[#1a1a2e] hover:bg-[#2a2a4a] text-slate-400 hover:text-white transition-colors"
@@ -76,10 +72,10 @@ function Modal({
         </button>
 
         <div className="grid md:grid-cols-[1fr_320px]">
-          {/* Media */}
           <div className="relative bg-[#080810] aspect-video flex items-center justify-center">
             {item.type === 'video' ? (
               <video
+                key={item.id}
                 src={item.src}
                 controls
                 autoPlay
@@ -96,7 +92,6 @@ function Modal({
               />
             )}
 
-            {/* Nav arrows */}
             <button
               onClick={onPrev}
               className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/50 hover:bg-black/80 flex items-center justify-center text-white transition-colors"
@@ -117,7 +112,6 @@ function Modal({
             </button>
           </div>
 
-          {/* Info panel */}
           <div className="p-7 flex flex-col justify-between">
             <div>
               <span className="inline-block text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full mb-4 bg-violet-500/10 text-violet-300">
@@ -160,8 +154,6 @@ function Modal({
   );
 }
 
-// ── Card ─────────────────────────────────────────────────────────────────────
-
 function Card({
   item,
   onClick,
@@ -177,7 +169,6 @@ function Card({
       whileHover={{ scale: 1.02 }}
       transition={{ duration: 0.2 }}
     >
-      {/* Thumbnail */}
       <Image
         src={item.thumbnail}
         alt={item.title}
@@ -186,7 +177,6 @@ function Card({
         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
       />
 
-      {/* Video badge */}
       {item.type === 'video' && (
         <div className="absolute top-3 right-3 flex items-center gap-1.5 bg-black/70 rounded-full px-2.5 py-1">
           <svg className="w-3 h-3 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -196,13 +186,11 @@ function Card({
         </div>
       )}
 
-      {/* Hover overlay */}
       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
         <span className="text-white font-semibold text-sm">{item.title}</span>
         <span className="text-slate-300 text-xs mt-0.5 capitalize">{item.category}</span>
       </div>
 
-      {/* View icon */}
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/20">
           <svg className="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
@@ -215,16 +203,17 @@ function Card({
   );
 }
 
-// ── Section ───────────────────────────────────────────────────────────────────
-
 export function Portfolio() {
   const [activeCategory, setActiveCategory] = useState<Category | 'all'>('all');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const filtered =
-    activeCategory === 'all'
-      ? portfolioItems
-      : portfolioItems.filter((i) => i.category === activeCategory);
+  const filtered = useMemo(
+    () =>
+      activeCategory === 'all'
+        ? portfolioItems
+        : portfolioItems.filter((i) => i.category === activeCategory),
+    [activeCategory]
+  );
 
   const selectedItem = portfolioItems.find((i) => i.id === selectedId) ?? null;
 
@@ -241,7 +230,6 @@ export function Portfolio() {
   return (
     <section id="portfolio" className="py-28 bg-[#080810]">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Heading */}
         <motion.div
           className="text-center mb-12"
           initial={{ opacity: 0, y: 30 }}
@@ -260,7 +248,6 @@ export function Portfolio() {
           </p>
         </motion.div>
 
-        {/* Filters */}
         <div className="flex flex-wrap justify-center gap-3 mb-12">
           {categories.map((cat) => (
             <button
@@ -277,7 +264,6 @@ export function Portfolio() {
           ))}
         </div>
 
-        {/* Grid */}
         <motion.div
           layout
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
@@ -298,7 +284,6 @@ export function Portfolio() {
           </AnimatePresence>
         </motion.div>
 
-        {/* ArtStation link */}
         <motion.div
           className="text-center mt-12"
           initial={{ opacity: 0 }}
@@ -320,7 +305,6 @@ export function Portfolio() {
         </motion.div>
       </div>
 
-      {/* Modal */}
       <AnimatePresence>
         {selectedItem && (
           <Modal
